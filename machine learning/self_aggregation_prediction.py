@@ -6,6 +6,7 @@ from sklearn.model_selection import KFold
 import numpy as np
 from openpyxl import load_workbook
 
+import os
 
 # functionaly to describe molecules via fingerprints and descriptors
 descr = Descriptors._descList
@@ -34,8 +35,8 @@ def describe(mols):
 
 ### file available via wget http://bkslab.org/static/files/aggregators/aggregator_hts.xls
 ### converted to XLSX manually for compatability w OpenPyXL
-wb = load_workbook(filename = '../data/aggregator_hts.xlsx')
-
+# wb = load_workbook(filename = '/Users/urzone/CoAggregators/data/aggregator_hts.xls')
+wb = load_workbook(os.path.join('../data/', 'aggregator_hts.xlsx'))
 
 # process file
 smiles = [x.value for x in wb.get_sheet_by_name("Master_List")["A"][1:]]
@@ -103,8 +104,10 @@ RF.fit(x,y)
 # predict new molecules from drugbank
 drugbank_mol = []
 drugbank_name = []
-drugbank_file = open("../data/drugbank5_approved_names_smiles.tsv","r")
- 
+# drugbank_file = open("../data/drugbank5_approved_names_smiles.tsv","r")
+drugbank_file = open(os.path.join('../data/', 'drugbank5_approved_names_smiles.tsv'), "r")
+
+
 _ = drugbank_file.next() # skip header
 for line in drugbank_file:
 	if not Chem.MolFromSmiles(line.split("\t")[1]) is None:
@@ -121,7 +124,9 @@ drugbank_descr_impu = imp.transform(drugbank_descr)
 predictions_drugbank = RF.predict(drugbank_descr_impu)
 probabilities_drugbank = RF.predict_proba(drugbank_descr_impu)[:,1]
 
-outfile = open("../data/drugbank_selfaggs_smiles.tsv","w")
+# outfile = open("../data/drugbank_selfaggs_smiles.tsv","w")
+outfile = open(os.path.join('../data/', 'drugbank_selfaggs_smiles.tsv'), "w")
+
 outfile.write("NAME\tSMILES\n")
 for i in range(len(drugbank_name)):
 	if probabilities_drugbank[i] > 0.2:
