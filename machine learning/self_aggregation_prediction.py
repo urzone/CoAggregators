@@ -34,7 +34,7 @@ def describe(mols):
 
 ### file available via wget http://bkslab.org/static/files/aggregators/aggregator_hts.xls
 ### converted to XLSX manually for compatability w OpenPyXL
-wb = load_workbook(filename = 'aggregator_hts.xlsx')
+wb = load_workbook(filename = '../data/aggregator_hts.xlsx')
 
 
 # process file
@@ -103,7 +103,7 @@ RF.fit(x,y)
 # predict new molecules from drugbank
 drugbank_mol = []
 drugbank_name = []
-drugbank_file = open("drugbank5_approved_names_smiles.tsv","r")
+drugbank_file = open("../data/drugbank5_approved_names_smiles.tsv","r")
  
 _ = drugbank_file.next() # skip header
 for line in drugbank_file:
@@ -121,7 +121,7 @@ drugbank_descr_impu = imp.transform(drugbank_descr)
 predictions_drugbank = RF.predict(drugbank_descr_impu)
 probabilities_drugbank = RF.predict_proba(drugbank_descr_impu)[:,1]
 
-outfile = open("drugbank_selfaggs_smiles.tsv","w")
+outfile = open("../data/drugbank_selfaggs_smiles.tsv","w")
 outfile.write("NAME\tSMILES\n")
 for i in range(len(drugbank_name)):
 	if probabilities_drugbank[i] > 0.2:
